@@ -11,6 +11,7 @@
 
 <!--
 `<oc-signin>` is used to authenticate with ordercloud.
+@demo
 -->
 <dom-module id="oc-signin">
 
@@ -55,6 +56,18 @@
       var OC = window.OC;
       Polymer({
         is: 'oc-signin',
+
+        /**
+         * Fired when signed in.
+         * @param {Object} detail The user object.
+         * @event oc-sign-in
+         */
+
+        /**
+         * Fired when there is an error during the signin flow.
+         * @param {Object} detail The error object.
+         * @event oc-sign-in-error
+         */
 
         properties: {
           /**
