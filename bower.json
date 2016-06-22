@@ -4,7 +4,7 @@
   "description": "A sign in button",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
-    "oc-core-utils": "^0.1.0",
+    "oc-core-utils": "^0.2.0",
     "oc-user-api": "^0.1.0",
     "iron-localstorage": "PolymerElements/iron-localstorage#^1.0.5",
     "iron-icon": "PolymerElements/iron-icon#^1.0.8",

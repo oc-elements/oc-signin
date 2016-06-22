@@ -20,9 +20,6 @@
       :host {
         display: block;
       }
-      paper-button > iron-icon {
-        margin-right: 0.4em;
-      }
     </style>
 
     <template is="dom-if" if="{{ !signedIn }}">
@@ -98,7 +95,7 @@
         signIn: function() {
           // TODO implement "state"
           window.location = [
-            OC.authHost, 'oauth/implicit?response_type=token&client_id=', OC.clientId,
+            OC.authHost, 'oauth/implicit?response_type=token&client_id=', OC.authClientId,
             '&redirect_uri=', encodeURIComponent(window.location.origin + '/oauth')
           ].join('');
         },
