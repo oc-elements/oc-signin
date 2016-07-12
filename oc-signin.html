@@ -39,12 +39,12 @@
     <app-route route="[[ route ]]" pattern="/oauth" tail="{{ routeData }}"></app-route>
 
     <iron-localstorage
-        id="storage"
-        name="oc-auth"
-        use-raw
-        auto-save-disabled
-        on-iron-localstorage-load="_localstorageLoaded"
-        on-iron-localstorage-load-empty="_localstorageLoaded"
+            id="storage"
+            name="oc-auth"
+            use-raw
+            auto-save-disabled
+            on-iron-localstorage-load="_localstorageLoaded"
+            on-iron-localstorage-load-empty="_localstorageLoaded"
     ></iron-localstorage>
 
     <oc-user-api id="usersAPI"></oc-user-api>
@@ -136,17 +136,18 @@
           }
 
           this.$.usersAPI.getLoggedInUser()
-              .then(function(request) {
-                this.user = request.response;
-                this.fire('oc-sign-in', request.response);
-              }.bind(this))
-              .catch(ExpiredTokenError, function() {
-                this._setToken(null);
-                this.signIn();
-              }.bind(this))
-              .catch(function(error) {
-                this.fire('oc-sign-in-error', error);
-              }.bind(this));
+                  .then(function(request) {
+                    this.user = request.response;
+                    OC.userId = this.user.id;
+                    this.fire('oc-sign-in', request.response);
+                  }.bind(this))
+                  .catch(ExpiredTokenError, function() {
+                    this._setToken(null);
+                    this.signIn();
+                  }.bind(this))
+                  .catch(function(error) {
+                    this.fire('oc-sign-in-error', error);
+                  }.bind(this));
         },
 
         _setToken: function (val) {
