@@ -1,29 +1,30 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>oc-signin demo</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>oc-signin demo</title>
+
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-
     <link rel="import" href="../oc-signin.html">
 
-    <style is="custom-style" include="demo-pages-shared-styles">
-    </style>
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
   </head>
   <body>
-
     <div class="vertical-section-container centered">
-      <h3>Basic oc-signin Demo</h3>
+      <h3>Basic oc-signin demo</h3>
       <demo-snippet>
         <template>
-          <oc-signin signed-in="{{ authenticated }}" user="{{ user }}"></oc-signin>
+          <oc-signin></oc-signin>
         </template>
       </demo-snippet>
     </div>
-
   </body>
 </html>
