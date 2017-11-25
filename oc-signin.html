@@ -108,7 +108,9 @@
            */
           signOut() {
               this._setToken(null);
-              this.fire('oc-sign-out');
+              his.dispatchEvent(new CustomEvent('oc-sign-out', {
+                  bubbles: true, composed: true, detail: error
+              }));
           }
 
           _computeSignedIn(user) {
@@ -129,7 +131,13 @@
               window.history.pushState(null,'','/');
           }
 
-          _authenticateUser(token) {
+
+        /**
+         * Logs use in and fetches the user details
+         * @param token
+         * @private
+         */
+        _authenticateUser(token) {
               if (!token) {
                   this.user = null;
                   return;
@@ -139,14 +147,18 @@
                   .then(function(request) {
                       this.user = request.response;
                       OC.userId = this.user.id;
-                      this.fire('oc-sign-in', request.response);
+                      this.dispatchEvent(new CustomEvent('oc-sign-in', {
+                          bubbles: true, composed: true, detail: request.response
+                      }));
                   }.bind(this))
                   .catch(ExpiredTokenError, function() {
                       this._setToken(null);
                       this.signIn();
                   }.bind(this))
                   .catch(function(error) {
-                      this.fire('oc-sign-in-error', error);
+                      this.dispatchEvent(new CustomEvent('oc-sign-error', {
+                          bubbles: true, composed: true, detail: error
+                      }));
                   }.bind(this));
           }
 
