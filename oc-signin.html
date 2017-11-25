@@ -68,12 +68,16 @@
             };
         }
 
+        ready() {
+            super.ready();
+        }
+
         /**
          * Sign in user. Redirects the user to authorization server for signing in.
          */
         signIn() {
             this.dispatchEvent(new CustomEvent('oc-sign-in', {
-                bubbles: true, composed: true, detail: request.response
+                bubbles: true, composed: true
             }));
         }
 
@@ -82,7 +86,7 @@
          */
         signOut() {
             this.dispatchEvent(new CustomEvent('oc-sign-out', {
-                bubbles: true, composed: true, detail: request.response
+                bubbles: true, composed: true
             }));
         }
 
