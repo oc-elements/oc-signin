@@ -1,13 +1,8 @@
 <link rel="import" href="../polymer/polymer-element.html">
-<link rel="import" href="../iron-localstorage/iron-localstorage.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../app-route/app-route.html">
-<link rel="import" href="../app-route/app-location.html">
-<link rel="import" href="../oc-core-utils/oc-core.html">
-<link rel="import" href="../oc-user-api/oc-user-api.html">
 
 <dom-module id="oc-signin">
   <template>
@@ -30,19 +25,6 @@
       <paper-icon-button on-tap="signOut" icon="power-settings-new"></paper-icon-button>
     </template>
 
-    <app-location route="{{ route }}"></app-location>
-    <app-route route="[[ route ]]" pattern="/oauth" tail="{{ routeData }}"></app-route>
-
-    <iron-localstorage
-            id="storage"
-            name="oc-auth"
-            use-raw
-            auto-save-disabled
-            on-iron-localstorage-load="_localstorageLoaded"
-            on-iron-localstorage-load-empty="_localstorageLoaded"
-    ></iron-localstorage>
-
-    <oc-user-api id="usersAPI"></oc-user-api>
 
   </template>
 
@@ -61,115 +43,56 @@
          * @param {Object} detail The user object.
          * @event oc-sign-in
          */
-      static get is() { return 'oc-signin'; }
-      static get properties() {
-        return {
-            /**
-             * Is the user signed in
-             */
-            signedIn: {
-                type: Boolean,
-                computed: '_computeSignedIn(user)',
-                notify: true
-            },
-            /**
-             * The signed in user
-             */
-            user: {
-                type: Object,
-                notify: true
-            }
-
-        };
-      }
-
-
-        static get observers() {
-            return [
-                '_routeChanged(routeData)',
-                '_authenticateUser(token)'
-            ]
+        static get is() {
+            return 'oc-signin';
         }
 
+        static get properties() {
+            return {
+                /**
+                 * Is the user signed in
+                 */
+                signedIn: {
+                    type: Boolean,
+                    computed: '_computeSignedIn(user)',
+                    notify: true
+                },
+                /**
+                 * The signed in user
+                 */
+                user: {
+                    type: Object,
+                    notify: true
+                }
+
+            };
+        }
 
         /**
          * Sign in user. Redirects the user to authorization server for signing in.
          */
         signIn() {
-              // TODO implement "state"
-              window.location = [
-                  OC.authHost, 'oauth/implicit?response_type=token&client_id=', OC.authClientId,
-                  '&redirect_uri=', encodeURIComponent(window.location.origin + '/oauth')
-              ].join('');
-          }
-
-          /**
-           * Sign out the user
-           */
-          signOut() {
-              this._setToken(null);
-              his.dispatchEvent(new CustomEvent('oc-sign-out', {
-                  bubbles: true, composed: true, detail: error
-              }));
-          }
-
-          _computeSignedIn(user) {
-              return user !== null;
-          }
-
-          _routeChanged(routeData) {
-              if (routeData.prefix !== '/oauth') {
-                  return;
-              }
-
-              if (routeData.__queryParams.access_token) {
-                  this._setToken(routeData.__queryParams.access_token);
-              }
-
-              // TODO handle errors
-
-              window.history.pushState(null,'','/');
-          }
-
+            this.dispatchEvent(new CustomEvent('oc-sign-in', {
+                bubbles: true, composed: true, detail: request.response
+            }));
+        }
 
         /**
-         * Logs use in and fetches the user details
-         * @param token
-         * @private
+         * Sign out the user
          */
-        _authenticateUser(token) {
-              if (!token) {
-                  this.user = null;
-                  return;
-              }
+        signOut() {
+            this.dispatchEvent(new CustomEvent('oc-sign-out', {
+                bubbles: true, composed: true, detail: request.response
+            }));
+        }
 
-              this.$.usersAPI.getLoggedInUser()
-                  .then(function(request) {
-                      this.user = request.response;
-                      OC.userId = this.user.id;
-                      this.dispatchEvent(new CustomEvent('oc-sign-in', {
-                          bubbles: true, composed: true, detail: request.response
-                      }));
-                  }.bind(this))
-                  .catch(ExpiredTokenError, function() {
-                      this._setToken(null);
-                      this.signIn();
-                  }.bind(this))
-                  .catch(function(error) {
-                      this.dispatchEvent(new CustomEvent('oc-sign-error', {
-                          bubbles: true, composed: true, detail: error
-                      }));
-                  }.bind(this));
-          }
+        _computeSignedIn(user) {
+            return user !== null;
+        }
 
-          _setToken(val) {
-              this.$.storage.value = this.token = OC.token = val;
-              this.$.storage.save();
-          }
 
-          _localstorageLoaded() {
-              this._setToken(this.$.storage.value);
-          }
+
+
     }
 
     window.customElements.define(OcSignin.is, OcSignin);
